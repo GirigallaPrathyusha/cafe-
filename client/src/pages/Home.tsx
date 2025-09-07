@@ -1,40 +1,31 @@
 import { useEffect, useState } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import FloatingBeans from '@/components/FloatingBeans';
-import ThreeJSCoffee from '@/components/ThreeJSCoffee';
 import ParticleBackground from '@/components/ParticleBackground';
-import StatsCounter from '@/components/StatsCounter';
 import MenuCard from '@/components/MenuCard';
 import TestimonialCard from '@/components/TestimonialCard';
-import ContactForm from '@/components/ContactForm';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import {
   Coffee,
   Heart,
-  Award,
-  MapPin,
-  Truck,
-  Leaf,
-  Clock,
   Star,
   Phone,
   Mail,
-  MapPinIcon,
-  ChevronDown,
+  MapPin,
   Play,
   Facebook,
   Instagram,
   Twitter,
   Youtube,
-  ArrowRight,
   Smartphone,
-  Gift,
   Menu,
-  X
+  X,
+  Code,
+  Download
 } from 'lucide-react';
 
 export default function Home() {
@@ -110,7 +101,7 @@ export default function Home() {
       imageUrl: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400"
     },
     {
-      name: "Americano",
+      name: "Americano", 
       description: "Smooth and clean coffee flavor with the perfect balance of strength and smoothness. A classic choice for purists.",
       price: "$3.99",
       imageUrl: "https://images.unsplash.com/photo-1541167760496-1628856ab772?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400"
@@ -118,26 +109,8 @@ export default function Home() {
     {
       name: "Cappuccino",
       description: "Creamy perfection with steamed milk and foam art. The ideal harmony of espresso, steamed milk, and velvety foam.",
-      price: "$5.99",
+      price: "$5.99", 
       imageUrl: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400"
-    },
-    {
-      name: "Premium Blend",
-      description: "Our signature blend crafted from the finest beans, offering a complex flavor profile that evolves with every sip.",
-      price: "$6.99",
-      imageUrl: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400"
-    },
-    {
-      name: "Cold Coffee",
-      description: "Refreshing cold brew coffee that's smooth, less acidic, and perfect for warm days or afternoon coding sessions.",
-      price: "$4.99",
-      imageUrl: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400"
-    },
-    {
-      name: "Tea Lover",
-      description: "Much like writing code, brewing the perfect cup of tea requires patience, precision, and a dash of passion.",
-      price: "$3.99",
-      imageUrl: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400"
     }
   ];
 
@@ -401,9 +374,9 @@ export default function Home() {
                 variants={staggerContainer}
               >
                 {[
-                  { icon: Truck, text: "Free Delivery" },
-                  { icon: Leaf, text: "100% Organic" },
-                  { icon: Clock, text: "24/7 Service" }
+                  { icon: Coffee, text: "Premium Quality" },
+                  { icon: Heart, text: "Made with Love" },
+                  { icon: Star, text: "5 Star Rating" }
                 ].map((item, index) => (
                   <motion.div 
                     key={item.text}
