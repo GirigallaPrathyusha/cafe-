@@ -647,6 +647,75 @@ export default function CoffeeLoverHome() {
         </div>
       </motion.section>
 
+      {/* Interactive Coffee Brewing Process */}
+      <motion.section 
+        className="py-20 bg-gradient-to-br from-background to-card relative overflow-hidden"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <div className="relative z-10 max-w-7xl mx-auto px-6">
+          <motion.h2 
+            className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-12 text-center"
+            variants={fadeInUpVariants}
+          >
+            Coffee Brewing Process
+          </motion.h2>
+          
+          <motion.div 
+            className="grid md:grid-cols-4 gap-8 mb-16"
+            variants={staggerContainer}
+          >
+            {[
+              { step: 1, title: "Bean Selection", description: "Handpicked premium beans from the finest coffee regions", icon: "🌱" },
+              { step: 2, title: "Roasting", description: "Perfectly roasted to unlock rich flavors and aromas", icon: "🔥" },
+              { step: 3, title: "Grinding", description: "Fresh ground to optimal consistency for extraction", icon: "⚙️" },
+              { step: 4, title: "Brewing", description: "Expertly brewed with precision and passion", icon: "☕" }
+            ].map((process, index) => (
+              <motion.div
+                key={process.step}
+                className="text-center group"
+                variants={fadeInUpVariants}
+                whileHover={{ scale: 1.05, y: -10 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <motion.div
+                  className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"
+                  animate={{ 
+                    rotate: [0, 360],
+                    scale: [1, 1.1, 1]
+                  }}
+                  transition={{ 
+                    rotate: { duration: 8, repeat: Infinity, ease: "linear" },
+                    scale: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 }
+                  }}
+                >
+                  {process.icon}
+                </motion.div>
+                <h3 className="font-serif text-xl font-bold text-foreground mb-3">
+                  Step {process.step}: {process.title}
+                </h3>
+                <p className="text-muted-foreground">{process.description}</p>
+                
+                <motion.div
+                  className="mt-4 h-1 bg-primary/20 rounded-full overflow-hidden"
+                  initial={{ width: 0 }}
+                  whileInView={{ width: "100%" }}
+                  transition={{ duration: 1, delay: index * 0.3 }}
+                >
+                  <motion.div
+                    className="h-full bg-primary rounded-full"
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "100%" }}
+                    transition={{ duration: 1.5, delay: index * 0.3 }}
+                  />
+                </motion.div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
       {/* Interactive Gallery Section */}
       <motion.section 
         className="py-20 bg-background relative overflow-hidden"
@@ -663,37 +732,173 @@ export default function CoffeeLoverHome() {
           </motion.h2>
           
           <motion.div 
-            className="relative h-96 rounded-2xl overflow-hidden shadow-2xl"
+            className="relative h-96 rounded-2xl overflow-hidden shadow-2xl group"
             variants={fadeInUpVariants}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
           >
             <AnimatePresence mode="wait">
               <motion.img
                 key={currentGalleryImage}
                 src={galleryImages[currentGalleryImage]}
                 alt="Coffee gallery"
-                className="w-full h-full object-cover"
-                initial={{ x: 300, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -300, opacity: 0 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                initial={{ x: 300, opacity: 0, scale: 1.1 }}
+                animate={{ x: 0, opacity: 1, scale: 1 }}
+                exit={{ x: -300, opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
               />
             </AnimatePresence>
             
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"
+              animate={{
+                background: [
+                  "linear-gradient(to top, rgba(0,0,0,0.5), transparent)",
+                  "linear-gradient(to top, rgba(255,153,51,0.3), transparent)",
+                  "linear-gradient(to top, rgba(0,0,0,0.5), transparent)"
+                ]
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            />
+            
+            {/* Navigation arrows */}
+            <motion.button
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={() => setCurrentGalleryImage((prev) => (prev - 1 + galleryImages.length) % galleryImages.length)}
+              whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.3)" }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <ChevronLeft className="w-6 h-6 text-white" />
+            </motion.button>
+            
+            <motion.button
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={() => setCurrentGalleryImage((prev) => (prev + 1) % galleryImages.length)}
+              whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.3)" }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <ChevronRight className="w-6 h-6 text-white" />
+            </motion.button>
             
             <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
               {galleryImages.map((_, index) => (
                 <motion.button
                   key={index}
-                  className={`w-3 h-3 rounded-full transition-colors ${
-                    index === currentGalleryImage ? 'bg-primary' : 'bg-white/50'
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentGalleryImage ? 'bg-primary w-8' : 'bg-white/50'
                   }`}
                   onClick={() => setCurrentGalleryImage(index)}
-                  whileHover={{ scale: 1.2 }}
+                  whileHover={{ scale: 1.3 }}
                   whileTap={{ scale: 0.8 }}
                 />
               ))}
             </div>
+          </motion.div>
+          
+          {/* Gallery thumbnails */}
+          <motion.div 
+            className="grid grid-cols-5 gap-4 mt-8"
+            variants={staggerContainer}
+          >
+            {galleryImages.map((image, index) => (
+              <motion.div
+                key={index}
+                className={`relative h-20 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 ${
+                  index === currentGalleryImage ? 'ring-2 ring-primary' : 'opacity-70 hover:opacity-100'
+                }`}
+                onClick={() => setCurrentGalleryImage(index)}
+                variants={fadeInUpVariants}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <img src={image} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
+                <motion.div
+                  className="absolute inset-0 bg-primary/20"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                  transition={{ duration: 0.2 }}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Advanced Features Showcase */}
+      <motion.section 
+        className="py-20 bg-gradient-to-r from-card to-background relative overflow-hidden"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <div className="relative z-10 max-w-7xl mx-auto px-6">
+          <motion.h2 
+            className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-12 text-center"
+            variants={fadeInUpVariants}
+          >
+            Why Choose Coffee Cafe?
+          </motion.h2>
+          
+          <motion.div 
+            className="grid md:grid-cols-3 gap-8"
+            variants={staggerContainer}
+          >
+            {[
+              { 
+                icon: Sparkles, 
+                title: "Premium Quality", 
+                description: "Only the finest beans from sustainable farms worldwide",
+                color: "from-yellow-400 to-orange-500"
+              },
+              { 
+                icon: Zap, 
+                title: "Lightning Fast", 
+                description: "Quick service without compromising on quality",
+                color: "from-blue-400 to-purple-500"
+              },
+              { 
+                icon: Heart, 
+                title: "Made with Love", 
+                description: "Every cup crafted with passion and precision",
+                color: "from-pink-400 to-red-500"
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                className="group relative p-8 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all duration-300"
+                variants={index % 2 === 0 ? slideInLeft : slideInRight}
+                whileHover={{ scale: 1.05, y: -10 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <motion.div
+                  className={`w-16 h-16 rounded-full bg-gradient-to-r ${feature.color} flex items-center justify-center mb-6`}
+                  animate={{ 
+                    rotate: [0, 360],
+                    scale: [1, 1.1, 1]
+                  }}
+                  transition={{ 
+                    rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+                    scale: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }
+                  }}
+                >
+                  <feature.icon className="w-8 h-8 text-white" />
+                </motion.div>
+                
+                <h3 className="font-serif text-2xl font-bold text-card-foreground mb-4 group-hover:text-primary transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
+                
+                <motion.div
+                  className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  initial={{ scale: 0.8 }}
+                  whileHover={{ scale: 1 }}
+                />
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </motion.section>
@@ -749,6 +954,99 @@ export default function CoffeeLoverHome() {
             </motion.div>
           </motion.div>
         </div>
+      </motion.section>
+
+      {/* Newsletter Section */}
+      <motion.section 
+        className="py-20 bg-gradient-to-br from-primary/10 via-accent/10 to-primary/10 relative overflow-hidden"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+          <motion.h2 
+            className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6"
+            variants={fadeInUpVariants}
+          >
+            Stay Updated with Coffee Cafe
+          </motion.h2>
+          <motion.p 
+            className="text-xl text-muted-foreground mb-8"
+            variants={fadeInUpVariants}
+          >
+            Subscribe to our newsletter for exclusive offers, new menu items, and coffee brewing tips
+          </motion.p>
+          
+          <motion.form 
+            onSubmit={handleNewsletterSubmit}
+            className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto"
+            variants={fadeInUpVariants}
+          >
+            <motion.input
+              type="email"
+              placeholder="Enter your email address"
+              value={newsletterEmail}
+              onChange={(e) => setNewsletterEmail(e.target.value)}
+              className="flex-1 px-6 py-3 rounded-full bg-background border border-border focus:border-primary focus:outline-none transition-colors"
+              whileFocus={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              required
+            />
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button 
+                type="submit"
+                disabled={newsletterMutation.isPending}
+                className="bg-primary text-primary-foreground px-8 py-3 rounded-full hover:bg-primary/90 transition-colors font-medium"
+              >
+                {newsletterMutation.isPending ? 'Subscribing...' : 'Subscribe'}
+              </Button>
+            </motion.div>
+          </motion.form>
+          
+          <motion.div 
+            className="mt-8 flex justify-center space-x-8"
+            variants={staggerContainer}
+          >
+            {[
+              { icon: "📧", text: "Weekly Updates" },
+              { icon: "🎁", text: "Exclusive Offers" },
+              { icon: "☕", text: "Brewing Tips" }
+            ].map((benefit, index) => (
+              <motion.div
+                key={benefit.text}
+                className="flex items-center space-x-2"
+                variants={fadeInUpVariants}
+                whileHover={{ scale: 1.1, y: -2 }}
+              >
+                <span className="text-2xl">{benefit.icon}</span>
+                <span className="text-muted-foreground">{benefit.text}</span>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+        
+        {/* Floating elements */}
+        <motion.div
+          className="absolute top-10 left-10 w-20 h-20 bg-primary/20 rounded-full blur-xl"
+          animate={{
+            y: [0, -20, 0],
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3]
+          }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-10 right-10 w-32 h-32 bg-accent/20 rounded-full blur-xl"
+          animate={{
+            y: [0, 20, 0],
+            scale: [1, 0.8, 1],
+            opacity: [0.4, 0.7, 0.4]
+          }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
       </motion.section>
 
       {/* Testimonials Section */}
