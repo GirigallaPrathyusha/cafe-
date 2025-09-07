@@ -444,74 +444,198 @@ export default function Home() {
       </motion.section>
 
       {/* Stats Section */}
-      <section id="about" className="py-20 bg-card relative overflow-hidden" data-testid="stats-section">
-        <div className="absolute inset-0 coffee-beans-bg opacity-50"></div>
+      <motion.section 
+        id="about" 
+        className="py-20 bg-card relative overflow-hidden" 
+        data-testid="stats-section"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <motion.div 
+          className="absolute inset-0 coffee-beans-bg opacity-50"
+          animate={{
+            backgroundPosition: ['0% 0%', '100% 100%'],
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
         
         <div className="relative z-10 max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-card-foreground mb-4" data-testid="stats-title">Our Achievements</h2>
-            <p className="text-muted-foreground text-lg">Numbers that speak for our quality and dedication</p>
-          </div>
+          <motion.div 
+            className="text-center mb-16"
+            variants={fadeInUpVariants}
+          >
+            <motion.h2 
+              className="font-serif text-4xl md:text-5xl font-bold text-card-foreground mb-4" 
+              data-testid="stats-title"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              viewport={{ once: true }}
+            >
+              Our Achievements
+            </motion.h2>
+            <motion.p 
+              className="text-muted-foreground text-lg"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              Numbers that speak for our quality and dedication
+            </motion.p>
+          </motion.div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            <StatsCounter 
-              target={120}
-              label="Cups Served Daily"
-              icon={<Coffee className="w-8 h-8 text-primary" />}
-            />
-            <StatsCounter 
-              target={400}
-              label="Happy Customers"
-              icon={<Heart className="w-8 h-8 text-primary" />}
-            />
-            <StatsCounter 
-              target={82}
-              label="Years of Excellence"
-              icon={<Award className="w-8 h-8 text-primary" />}
-            />
-            <StatsCounter 
-              target={15}
-              label="Locations"
-              icon={<MapPin className="w-8 h-8 text-primary" />}
-            />
-          </div>
+          <motion.div 
+            className="grid grid-cols-2 lg:grid-cols-4 gap-8"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            {[
+              { target: 120, label: "Cups Served Daily", icon: Coffee },
+              { target: 400, label: "Happy Customers", icon: Heart },
+              { target: 82, label: "Years of Excellence", icon: Award },
+              { target: 15, label: "Locations", icon: MapPin }
+            ].map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                variants={fadeInUpVariants}
+              >
+                <StatsCounter 
+                  target={stat.target}
+                  label={stat.label}
+                  icon={<stat.icon className="w-8 h-8 text-primary" />}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Menu Section */}
-      <section id="menu" className="py-20 bg-background relative overflow-hidden" data-testid="menu-section">
-        <div className="absolute inset-0 parallax-bg opacity-10" style={{backgroundImage: "url('https://images.unsplash.com/photo-1495774856032-8b90bbb32b32?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080')"}}></div>
+      <motion.section 
+        id="menu" 
+        className="py-20 bg-background relative overflow-hidden" 
+        data-testid="menu-section"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
+        <motion.div 
+          className="absolute inset-0 parallax-bg opacity-10" 
+          style={{
+            backgroundImage: "url('https://images.unsplash.com/photo-1495774856032-8b90bbb32b32?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080')",
+            y: backgroundY
+          }}
+        />
         
         <div className="relative z-10 max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4" data-testid="menu-title">
-              We serve the <span className="text-primary">richest Coffee</span> in the city
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">Coffee And Code - The perfect blend for developers and coffee enthusiasts</p>
-          </div>
+          <motion.div 
+            className="text-center mb-16"
+            variants={fadeInUpVariants}
+          >
+            <motion.h2 
+              className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4" 
+              data-testid="menu-title"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              viewport={{ once: true }}
+            >
+              We serve the <motion.span 
+                className="text-primary"
+                animate={{
+                  textShadow: [
+                    "0 0 0px rgba(217, 119, 6, 0.5)",
+                    "0 0 10px rgba(217, 119, 6, 0.8)",
+                    "0 0 0px rgba(217, 119, 6, 0.5)"
+                  ]
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                richest Coffee
+              </motion.span> in the city
+            </motion.h2>
+            <motion.p 
+              className="text-muted-foreground text-lg max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              Coffee And Code - The perfect blend for developers and coffee enthusiasts
+            </motion.p>
+          </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {menuItems.map((item) => (
-              <MenuCard
+          <motion.div 
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+          >
+            {menuItems.map((item, index) => (
+              <motion.div
                 key={item.name}
-                name={item.name}
-                description={item.description}
-                price={item.price}
-                imageUrl={item.imageUrl}
-                onAddToCart={() => handleAddToCart(item.name)}
-              />
+                variants={fadeInUpVariants}
+                custom={index}
+              >
+                <MenuCard
+                  name={item.name}
+                  description={item.description}
+                  price={item.price}
+                  imageUrl={item.imageUrl}
+                  onAddToCart={() => handleAddToCart(item.name)}
+                />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
-          <div className="text-center mt-16">
-            <div className="inline-flex items-center space-x-4 bg-card p-2 rounded-full shadow-lg">
-              <div className="bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-medium">Premium Coffee</div>
+          <motion.div 
+            className="text-center mt-16"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            <motion.div 
+              className="inline-flex items-center space-x-4 bg-card p-2 rounded-full shadow-lg"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <motion.div 
+                className="bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-medium"
+                animate={{
+                  boxShadow: [
+                    "0 0 0px rgba(217, 119, 6, 0.3)",
+                    "0 0 20px rgba(217, 119, 6, 0.6)",
+                    "0 0 0px rgba(217, 119, 6, 0.3)"
+                  ]
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                Premium Coffee
+              </motion.div>
               <div className="px-4 py-2 text-muted-foreground text-sm font-medium">Hot Coffee</div>
               <div className="px-4 py-2 text-muted-foreground text-sm font-medium">Cold Coffee</div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Mobile App Section */}
       <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden" data-testid="mobile-app-section">
