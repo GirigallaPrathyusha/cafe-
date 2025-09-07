@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import FloatingBeans from '@/components/FloatingBeans';
 import ThreeJSCoffee from '@/components/ThreeJSCoffee';
+import ParticleBackground from '@/components/ParticleBackground';
 import StatsCounter from '@/components/StatsCounter';
 import MenuCard from '@/components/MenuCard';
 import TestimonialCard from '@/components/TestimonialCard';
@@ -41,6 +43,11 @@ export default function Home() {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const { toast } = useToast();
+
+  const { scrollYProgress } = useScroll();
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 1.1]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -168,9 +175,33 @@ export default function Home() {
     });
   };
 
+  const fadeInUpVariants = {
+    hidden: { opacity: 0, y: 60 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.1
+      }
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <FloatingBeans />
+      <ParticleBackground />
 
       {/* Floating Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 px-6 py-4 transition-all duration-300 ${isScrolled ? 'bg-background/95 backdrop-blur-20 shadow-lg' : ''}`} data-testid="navigation-bar">
@@ -222,79 +253,195 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden" data-testid="hero-section">
-        {/* Cozy coffee shop interior background */}
-        <div className="absolute inset-0 z-0">
+      <motion.section 
+        id="home" 
+        className="relative min-h-screen flex items-center justify-center overflow-hidden" 
+        data-testid="hero-section"
+        style={{ opacity: heroOpacity, scale: heroScale }}
+      >
+        {/* Parallax background */}
+        <motion.div 
+          className="absolute inset-0 z-0"
+          style={{ y: backgroundY }}
+        >
           <img 
             src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080" 
             alt="Cozy coffee shop interior with warm lighting and wooden furniture" 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover scale-110"
             data-testid="hero-background-image"
           />
           <div className="absolute inset-0 hero-gradient"></div>
+        </motion.div>
+
+        {/* Animated coffee beans background */}
+        <motion.div 
+          className="coffee-beans-bg absolute inset-0 z-10"
+          animate={{
+            backgroundPosition: ['0% 0%', '100% 100%'],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+
+        {/* Dynamic light rays */}
+        <div className="absolute inset-0 z-15">
+          {[...Array(5)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-full bg-gradient-to-t from-transparent via-yellow-300/10 to-transparent"
+              style={{
+                left: `${20 + i * 15}%`,
+                transformOrigin: 'bottom',
+              }}
+              animate={{
+                scaleY: [0.5, 1, 0.5],
+                opacity: [0.2, 0.6, 0.2],
+                rotateZ: [0, 2, -2, 0],
+              }}
+              transition={{
+                duration: 4 + i,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * 0.5,
+              }}
+            />
+          ))}
         </div>
 
-        <div className="coffee-beans-bg absolute inset-0 z-10"></div>
-
-        <div className="relative z-20 max-w-7xl mx-auto px-6 text-center">
+        <motion.div 
+          className="relative z-20 max-w-7xl mx-auto px-6 text-center"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="text-left space-y-6">
-              <div className="inline-flex items-center px-4 py-2 bg-accent/20 rounded-full text-accent font-medium text-sm">
+            <motion.div 
+              className="text-left space-y-6"
+              variants={fadeInUpVariants}
+            >
+              <motion.div 
+                className="inline-flex items-center px-4 py-2 bg-accent/20 rounded-full text-accent font-medium text-sm backdrop-blur-sm"
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+              >
                 <Star className="w-4 h-4 mr-2" />
                 Since 1941
-              </div>
+              </motion.div>
               
-              <h1 className="font-serif text-5xl md:text-7xl font-bold text-white leading-tight" data-testid="hero-title">
-                Fresh Coffee
-                <span className="block text-accent">in the Morning</span>
-              </h1>
+              <motion.h1 
+                className="font-serif text-5xl md:text-7xl font-bold text-white leading-tight" 
+                data-testid="hero-title"
+                variants={fadeInUpVariants}
+              >
+                <motion.span
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  Fresh Coffee
+                </motion.span>
+                <motion.span 
+                  className="block text-accent"
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                >
+                  in the Morning
+                </motion.span>
+              </motion.h1>
               
-              <p className="text-xl text-white/90 max-w-lg leading-relaxed" data-testid="hero-description">
+              <motion.p 
+                className="text-xl text-white/90 max-w-lg leading-relaxed" 
+                data-testid="hero-description"
+                variants={fadeInUpVariants}
+              >
                 Start your day right with a cup of our freshly brewed coffee. 
                 Whether you're here for a quick pick-me-up or a leisurely morning, 
                 we're here to make your mornings better.
-              </p>
+              </motion.p>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button className="bg-accent text-accent-foreground px-8 py-4 rounded-full font-semibold text-lg hover:bg-accent/90 transition-all transform hover:scale-105" data-testid="button-get-yours-now">
-                  <Coffee className="w-5 h-5 mr-2" />
-                  Get Yours Now
-                </Button>
-                <Button variant="outline" className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-foreground transition-all" data-testid="button-watch-story">
-                  <Play className="w-5 h-5 mr-2" />
-                  Watch Story
-                </Button>
-              </div>
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-4"
+                variants={fadeInUpVariants}
+              >
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button className="bg-accent text-accent-foreground px-8 py-4 rounded-full font-semibold text-lg hover:bg-accent/90 transition-all relative overflow-hidden group" data-testid="button-get-yours-now">
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 opacity-0 group-hover:opacity-100"
+                      initial={{ x: '-100%' }}
+                      whileHover={{ x: 0 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                    <span className="relative z-10 flex items-center">
+                      <Coffee className="w-5 h-5 mr-2" />
+                      Get Yours Now
+                    </span>
+                  </Button>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button variant="outline" className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-foreground transition-all backdrop-blur-sm" data-testid="button-watch-story">
+                    <Play className="w-5 h-5 mr-2" />
+                    Watch Story
+                  </Button>
+                </motion.div>
+              </motion.div>
 
-              <div className="flex items-center space-x-8 pt-6">
-                <div className="flex items-center space-x-2 text-white">
-                  <Truck className="w-5 h-5 text-accent" />
-                  <span>Free Delivery</span>
-                </div>
-                <div className="flex items-center space-x-2 text-white">
-                  <Leaf className="w-5 h-5 text-accent" />
-                  <span>100% Organic</span>
-                </div>
-                <div className="flex items-center space-x-2 text-white">
-                  <Clock className="w-5 h-5 text-accent" />
-                  <span>24/7 Service</span>
-                </div>
-              </div>
-            </div>
+              <motion.div 
+                className="flex items-center space-x-8 pt-6"
+                variants={staggerContainer}
+              >
+                {[
+                  { icon: Truck, text: "Free Delivery" },
+                  { icon: Leaf, text: "100% Organic" },
+                  { icon: Clock, text: "24/7 Service" }
+                ].map((item, index) => (
+                  <motion.div 
+                    key={item.text}
+                    className="flex items-center space-x-2 text-white"
+                    variants={fadeInUpVariants}
+                    whileHover={{ scale: 1.1, y: -2 }}
+                  >
+                    <item.icon className="w-5 h-5 text-accent" />
+                    <span>{item.text}</span>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </motion.div>
 
-            <div className="relative">
+            <motion.div 
+              className="relative"
+              variants={fadeInUpVariants}
+            >
               <ThreeJSCoffee />
 
-              <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-center">
-                <div className="animate-bounce-slow">
-                  <ChevronDown className="w-6 h-6 text-white" />
-                </div>
+              <motion.div 
+                className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-center"
+                animate={{
+                  y: [0, -10, 0],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <ChevronDown className="w-6 h-6 text-white" />
                 <p className="text-white mt-2 text-sm">Scroll Down</p>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {/* Stats Section */}
       <section id="about" className="py-20 bg-card relative overflow-hidden" data-testid="stats-section">
