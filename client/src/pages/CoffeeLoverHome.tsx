@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useEffect, useState, useRef } from 'react';
+import { motion, useScroll, useTransform, useInView, useAnimation, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import FloatingBeans from '@/components/FloatingBeans';
 import ParticleBackground from '@/components/ParticleBackground';
+import ThreeJSCoffee from '@/components/ThreeJSCoffee';
 import MenuCard from '@/components/MenuCard';
 import TestimonialCard from '@/components/TestimonialCard';
+import StatsCounter from '@/components/StatsCounter';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
@@ -26,18 +28,52 @@ import {
   X,
   Code,
   Download,
-  ArrowRight
+  ArrowRight,
+  Award,
+  Users,
+  TrendingUp,
+  Clock,
+  Sparkles,
+  Zap,
+  Globe,
+  CheckCircle,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 export default function CoffeeLoverHome() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [currentGalleryImage, setCurrentGalleryImage] = useState(0);
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const { toast } = useToast();
+  const heroRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const controls = useAnimation();
 
   const { scrollYProgress } = useScroll();
   const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  const heroY = useTransform(scrollYProgress, [0, 0.5], ['0%', '50%']);
+  const parallaxY = useTransform(scrollYProgress, [0, 1], ['0%', '-50%']);
+  const rotateX = useTransform(scrollYProgress, [0, 1], [0, 360]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 1.2]);
+
+  const galleryImages = [
+    "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+    "https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+    "https://images.unsplash.com/photo-1572442388796-11668a67e53d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+    "https://images.unsplash.com/photo-1541167760496-1628856ab772?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+    "https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+  ];
+
+  const stats = [
+    { icon: Users, number: 50000, label: "Happy Customers", suffix: "+" },
+    { icon: Coffee, number: 150000, label: "Cups Served", suffix: "+" },
+    { icon: Award, number: 25, label: "Awards Won", suffix: "+" },
+    { icon: Globe, number: 15, label: "Locations", suffix: "" }
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,6 +91,22 @@ export default function CoffeeLoverHome() {
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const galleryInterval = setInterval(() => {
+      setCurrentGalleryImage((prev) => (prev + 1) % galleryImages.length);
+    }, 3000);
+
+    return () => clearInterval(galleryInterval);
+  }, [galleryImages.length]);
+
+  const isStatsInView = useInView(statsRef, { once: true, amount: 0.3 });
+
+  useEffect(() => {
+    if (isStatsInView) {
+      controls.start("visible");
+    }
+  }, [isStatsInView, controls]);
 
   const newsletterMutation = useMutation({
     mutationFn: async (email: string) => {
@@ -170,6 +222,24 @@ export default function CoffeeLoverHome() {
     }
   };
 
+  const slideInLeft = {
+    hidden: { x: -100, opacity: 0 },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.8, ease: "easeOut" }
+    }
+  };
+
+  const slideInRight = {
+    hidden: { x: 100, opacity: 0 },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.8, ease: "easeOut" }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <FloatingBeans />
@@ -260,29 +330,32 @@ export default function CoffeeLoverHome() {
         </div>
 
         {/* Mobile menu */}
-        {isMobileMenuOpen && (
-          <motion.div 
-            className="md:hidden mt-4 p-4 bg-card rounded-lg shadow-lg" 
-            data-testid="mobile-menu"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-          >
-            <div className="flex flex-col space-y-3">
-              <button onClick={() => scrollToSection('home')} className="text-left text-card-foreground hover:text-primary transition-colors font-medium" data-testid="mobile-nav-home">Home</button>
-              <button onClick={() => scrollToSection('services')} className="text-left text-card-foreground hover:text-primary transition-colors font-medium" data-testid="mobile-nav-services">Services</button>
-              <button onClick={() => scrollToSection('about')} className="text-left text-card-foreground hover:text-primary transition-colors font-medium" data-testid="mobile-nav-about">About</button>
-              <Button className="bg-primary text-primary-foreground px-6 py-2 rounded-full hover:bg-primary/90 transition-colors font-medium mt-3" data-testid="button-order-now-mobile">
-                Order
-              </Button>
-            </div>
-          </motion.div>
-        )}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div 
+              className="md:hidden mt-4 p-4 bg-card rounded-lg shadow-lg" 
+              data-testid="mobile-menu"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              <div className="flex flex-col space-y-3">
+                <button onClick={() => scrollToSection('home')} className="text-left text-card-foreground hover:text-primary transition-colors font-medium" data-testid="mobile-nav-home">Home</button>
+                <button onClick={() => scrollToSection('services')} className="text-left text-card-foreground hover:text-primary transition-colors font-medium" data-testid="mobile-nav-services">Services</button>
+                <button onClick={() => scrollToSection('about')} className="text-left text-card-foreground hover:text-primary transition-colors font-medium" data-testid="mobile-nav-about">About</button>
+                <Button className="bg-primary text-primary-foreground px-6 py-2 rounded-full hover:bg-primary/90 transition-colors font-medium mt-3" data-testid="button-order-now-mobile">
+                  Order
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.nav>
 
       {/* Hero Section */}
       <motion.section 
         id="home" 
+        ref={heroRef}
         className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20" 
         data-testid="hero-section"
         initial="hidden"
@@ -291,15 +364,33 @@ export default function CoffeeLoverHome() {
       >
         <motion.div 
           className="absolute inset-0 z-0"
-          style={{ y: backgroundY }}
+          style={{ y: heroY }}
         >
-          <img 
-            src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080" 
-            alt="Beautiful coffee beans background" 
-            className="w-full h-full object-cover opacity-20"
-            data-testid="hero-background-image"
-          />
+          <AnimatePresence mode="wait">
+            <motion.img 
+              key={currentGalleryImage}
+              src={galleryImages[currentGalleryImage]}
+              alt="Dynamic coffee background" 
+              className="w-full h-full object-cover opacity-30"
+              data-testid="hero-background-image"
+              initial={{ scale: 1.2, opacity: 0 }}
+              animate={{ scale: 1, opacity: 0.3 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+            />
+          </AnimatePresence>
           <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/60 to-background/80"></div>
+          <motion.div 
+            className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent"
+            animate={{
+              background: [
+                "linear-gradient(to top, rgba(255, 153, 51, 0.1), transparent)",
+                "linear-gradient(to top, rgba(255, 153, 51, 0.2), transparent)",
+                "linear-gradient(to top, rgba(255, 153, 51, 0.1), transparent)"
+              ]
+            }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          />
         </motion.div>
 
         <div className="relative z-20 max-w-7xl mx-auto px-6 text-center">
@@ -344,24 +435,28 @@ export default function CoffeeLoverHome() {
           </motion.div>
 
           <motion.div 
-            className="mb-16"
+            className="mb-16 relative"
             variants={fadeInUpVariants}
           >
-            <motion.img 
-              src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=600" 
-              alt="Premium coffee cup"
-              className="w-64 h-64 mx-auto rounded-full object-cover shadow-2xl border-4 border-primary/20"
-              data-testid="hero-coffee-image"
+            <motion.div
+              className="relative z-10"
+              style={{ scale }}
+            >
+              <ThreeJSCoffee />
+            </motion.div>
+            <motion.div
+              className="absolute inset-0 z-0"
               animate={{
-                y: [0, -20, 0],
-                rotateY: [0, 10, -10, 0],
+                rotate: [0, 360],
+                scale: [1, 1.1, 1]
               }}
               transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
+                rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                scale: { duration: 3, repeat: Infinity, ease: "easeInOut" }
               }}
-            />
+            >
+              <div className="w-64 h-64 mx-auto rounded-full bg-gradient-to-br from-primary/20 to-accent/20 blur-xl" />
+            </motion.div>
           </motion.div>
 
           <motion.div variants={fadeInUpVariants}>
@@ -390,9 +485,53 @@ export default function CoffeeLoverHome() {
         </div>
       </motion.section>
 
+      {/* Stats Section */}
+      <motion.section 
+        ref={statsRef}
+        className="py-20 bg-gradient-to-r from-primary/10 to-accent/10 relative overflow-hidden"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <div className="relative z-10 max-w-7xl mx-auto px-6">
+          <motion.div 
+            className="grid md:grid-cols-4 gap-8"
+            variants={staggerContainer}
+          >
+            {stats.map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                className="text-center"
+                variants={slideInLeft}
+                whileHover={{ scale: 1.05, y: -10 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <motion.div
+                  className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
+                  animate={{ rotateY: [0, 360] }}
+                  transition={{ duration: 3, delay: index * 0.2, repeat: Infinity, ease: "linear" }}
+                >
+                  <stat.icon className="w-10 h-10 text-primary-foreground" />
+                </motion.div>
+                <motion.div
+                  className="text-4xl font-bold text-foreground mb-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 2, delay: index * 0.2 }}
+                >
+                  {stat.number.toLocaleString()}{stat.suffix}
+                </motion.div>
+                <p className="text-muted-foreground font-medium">{stat.label}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
       {/* Menu Section */}
       <motion.section 
         id="services" 
+        ref={menuRef}
         className="py-20 bg-card relative overflow-hidden" 
         data-testid="menu-section"
         initial="hidden"
@@ -407,18 +546,37 @@ export default function CoffeeLoverHome() {
             {menuItems.map((item, index) => (
               <motion.div
                 key={item.name}
-                variants={fadeInUpVariants}
-                className="text-center"
+                variants={index % 2 === 0 ? slideInLeft : slideInRight}
+                className="text-center group"
+                whileHover={{ scale: 1.05 }}
               >
-                <motion.img 
-                  src={item.imageUrl} 
-                  alt={item.name}
-                  className="w-48 h-48 mx-auto rounded-full object-cover mb-6 shadow-lg"
-                  whileHover={{ scale: 1.1, rotateY: 15 }}
+                <motion.div
+                  className="relative overflow-hidden rounded-full mb-6 mx-auto w-48 h-48"
+                  whileHover={{ rotateY: 15 }}
                   transition={{ type: "spring", stiffness: 300 }}
-                />
+                >
+                  <img 
+                    src={item.imageUrl} 
+                    alt={item.name}
+                    className="w-full h-full object-cover shadow-lg group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  />
+                </motion.div>
                 <h3 className="font-serif text-3xl font-bold text-card-foreground mb-4">{item.name}</h3>
-                <p className="text-muted-foreground leading-relaxed">{item.description}</p>
+                <p className="text-muted-foreground leading-relaxed mb-4">{item.description}</p>
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button 
+                    className="bg-primary text-primary-foreground hover:bg-primary/90"
+                    onClick={() => handleAddToCart(item.name)}
+                  >
+                    Add to Cart - {item.price}
+                  </Button>
+                </motion.div>
               </motion.div>
             ))}
           </motion.div>
@@ -458,11 +616,15 @@ export default function CoffeeLoverHome() {
                   key={type}
                   className="text-center"
                   variants={fadeInUpVariants}
-                  whileHover={{ scale: 1.1 }}
+                  whileHover={{ scale: 1.1, y: -5 }}
                 >
-                  <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
+                  <motion.div 
+                    className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3"
+                    animate={{ rotate: [0, 360] }}
+                    transition={{ duration: 8, delay: index * 0.5, repeat: Infinity, ease: "linear" }}
+                  >
                     <Coffee className="w-8 h-8 text-primary-foreground" />
-                  </div>
+                  </motion.div>
                   <p className="text-card-foreground font-medium">{type}</p>
                 </motion.div>
               ))}
@@ -485,9 +647,60 @@ export default function CoffeeLoverHome() {
         </div>
       </motion.section>
 
+      {/* Interactive Gallery Section */}
+      <motion.section 
+        className="py-20 bg-background relative overflow-hidden"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <div className="relative z-10 max-w-7xl mx-auto px-6">
+          <motion.h2 
+            className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-12 text-center"
+            variants={fadeInUpVariants}
+          >
+            Coffee Gallery
+          </motion.h2>
+          
+          <motion.div 
+            className="relative h-96 rounded-2xl overflow-hidden shadow-2xl"
+            variants={fadeInUpVariants}
+          >
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={currentGalleryImage}
+                src={galleryImages[currentGalleryImage]}
+                alt="Coffee gallery"
+                className="w-full h-full object-cover"
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              />
+            </AnimatePresence>
+            
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            
+            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
+              {galleryImages.map((_, index) => (
+                <motion.button
+                  key={index}
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    index === currentGalleryImage ? 'bg-primary' : 'bg-white/50'
+                  }`}
+                  onClick={() => setCurrentGalleryImage(index)}
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.8 }}
+                />
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </motion.section>
+
       {/* Mobile App Section */}
       <motion.section 
-        className="py-20 bg-background relative overflow-hidden" 
+        className="py-20 bg-gradient-to-br from-primary/20 to-accent/20 relative overflow-hidden" 
         data-testid="mobile-app-section"
         initial="hidden"
         whileInView="visible"
@@ -508,7 +721,7 @@ export default function CoffeeLoverHome() {
             variants={staggerContainer}
           >
             <motion.div
-              variants={fadeInUpVariants}
+              variants={slideInLeft}
               whileHover={{ scale: 1.05, y: -5 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -522,7 +735,7 @@ export default function CoffeeLoverHome() {
             </motion.div>
             
             <motion.div
-              variants={fadeInUpVariants}
+              variants={slideInRight}
               whileHover={{ scale: 1.05, y: -5 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -563,7 +776,9 @@ export default function CoffeeLoverHome() {
             {testimonials.map((testimonial, index) => (
               <motion.div
                 key={`${testimonial.name}-${index}`}
-                variants={fadeInUpVariants}
+                variants={index % 2 === 0 ? slideInLeft : slideInRight}
+                whileHover={{ scale: 1.05, y: -10 }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
                 <TestimonialCard
                   name={testimonial.name}
@@ -582,17 +797,22 @@ export default function CoffeeLoverHome() {
             variants={fadeInUpVariants}
           >
             {[1, 2, 3, 4].map((page) => (
-              <Button
+              <motion.div
                 key={page}
-                variant="ghost"
-                size="sm"
-                className={`w-8 h-8 rounded-full p-0 ${
-                  page === 1 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
-                }`}
-                data-testid={`testimonial-page-${page}`}
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.8 }}
               >
-                {page}
-              </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={`w-8 h-8 rounded-full p-0 ${
+                    page === 1 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+                  }`}
+                  data-testid={`testimonial-page-${page}`}
+                >
+                  {page}
+                </Button>
+              </motion.div>
             ))}
           </motion.div>
         </div>
@@ -608,7 +828,7 @@ export default function CoffeeLoverHome() {
       >
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
-            <motion.div variants={fadeInUpVariants}>
+            <motion.div variants={slideInLeft}>
               <div className="flex items-center space-x-3 mb-6">
                 <Coffee className="w-8 h-8 text-primary" />
                 <span className="font-serif font-bold text-2xl text-foreground">Coffee Cafe</span>
@@ -616,51 +836,68 @@ export default function CoffeeLoverHome() {
               <p className="text-muted-foreground mb-6">
                 Crafted Coffee, Cozy Vibes, Unforgettable Moments – Your Perfect Espresso Escape
               </p>
-              <a 
+              <motion.a 
                 href="https://www.youtube.com" 
                 className="text-primary hover:text-primary/80 transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
+                whileHover={{ scale: 1.05 }}
               >
                 Visit our YouTube Channel
-              </a>
+              </motion.a>
             </motion.div>
 
             <motion.div variants={fadeInUpVariants}>
               <h3 className="font-serif text-xl font-bold text-foreground mb-6">Important Links</h3>
               <ul className="space-y-3">
-                <li><button onClick={() => scrollToSection('home')} className="text-muted-foreground hover:text-primary transition-colors">Home</button></li>
-                <li><button onClick={() => scrollToSection('about')} className="text-muted-foreground hover:text-primary transition-colors">About</button></li>
-                <li><button className="text-muted-foreground hover:text-primary transition-colors">Contact</button></li>
-                <li><button className="text-muted-foreground hover:text-primary transition-colors">Blog</button></li>
+                <motion.li whileHover={{ x: 5 }}>
+                  <button onClick={() => scrollToSection('home')} className="text-muted-foreground hover:text-primary transition-colors">Home</button>
+                </motion.li>
+                <motion.li whileHover={{ x: 5 }}>
+                  <button onClick={() => scrollToSection('about')} className="text-muted-foreground hover:text-primary transition-colors">About</button>
+                </motion.li>
+                <motion.li whileHover={{ x: 5 }}>
+                  <button className="text-muted-foreground hover:text-primary transition-colors">Contact</button>
+                </motion.li>
+                <motion.li whileHover={{ x: 5 }}>
+                  <button className="text-muted-foreground hover:text-primary transition-colors">Blog</button>
+                </motion.li>
               </ul>
             </motion.div>
 
             <motion.div variants={fadeInUpVariants}>
               <h3 className="font-serif text-xl font-bold text-foreground mb-6">Quick Links</h3>
               <ul className="space-y-3">
-                <li><button onClick={() => scrollToSection('home')} className="text-muted-foreground hover:text-primary transition-colors">Home</button></li>
-                <li><button onClick={() => scrollToSection('about')} className="text-muted-foreground hover:text-primary transition-colors">About</button></li>
-                <li><button className="text-muted-foreground hover:text-primary transition-colors">Contact</button></li>
-                <li><button className="text-muted-foreground hover:text-primary transition-colors">Blog</button></li>
+                <motion.li whileHover={{ x: 5 }}>
+                  <button onClick={() => scrollToSection('home')} className="text-muted-foreground hover:text-primary transition-colors">Home</button>
+                </motion.li>
+                <motion.li whileHover={{ x: 5 }}>
+                  <button onClick={() => scrollToSection('about')} className="text-muted-foreground hover:text-primary transition-colors">About</button>
+                </motion.li>
+                <motion.li whileHover={{ x: 5 }}>
+                  <button className="text-muted-foreground hover:text-primary transition-colors">Contact</button>
+                </motion.li>
+                <motion.li whileHover={{ x: 5 }}>
+                  <button className="text-muted-foreground hover:text-primary transition-colors">Blog</button>
+                </motion.li>
               </ul>
             </motion.div>
 
-            <motion.div variants={fadeInUpVariants}>
+            <motion.div variants={slideInRight}>
               <h3 className="font-serif text-xl font-bold text-foreground mb-6">Address</h3>
               <div className="space-y-3">
-                <div className="flex items-center space-x-3">
+                <motion.div className="flex items-center space-x-3" whileHover={{ x: 5 }}>
                   <Mail className="w-5 h-5 text-primary" />
                   <span className="text-muted-foreground">coffee@cafe.com</span>
-                </div>
-                <div className="flex items-center space-x-3">
+                </motion.div>
+                <motion.div className="flex items-center space-x-3" whileHover={{ x: 5 }}>
                   <Phone className="w-5 h-5 text-primary" />
                   <span className="text-muted-foreground">+1 234 567 890</span>
-                </div>
-                <div className="flex items-center space-x-3">
+                </motion.div>
+                <motion.div className="flex items-center space-x-3" whileHover={{ x: 5 }}>
                   <MapPin className="w-5 h-5 text-primary" />
                   <span className="text-muted-foreground">123 Coffee Street, City</span>
-                </div>
+                </motion.div>
               </div>
               
               <div className="flex space-x-4 mt-6">
