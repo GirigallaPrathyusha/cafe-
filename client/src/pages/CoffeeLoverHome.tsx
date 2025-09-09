@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import FloatingBeans from '@/components/FloatingBeans';
 import ParticleBackground from '@/components/ParticleBackground';
-import ThreeJSCoffee from '@/components/ThreeJSCoffee';
 import MenuCard from '@/components/MenuCard';
 import TestimonialCard from '@/components/TestimonialCard';
 import StatsCounter from '@/components/StatsCounter';
@@ -38,7 +37,10 @@ import {
   Globe,
   CheckCircle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  ShoppingCart,
+  Utensils,
+  Bike
 } from 'lucide-react';
 
 export default function CoffeeLoverHome() {
@@ -47,6 +49,7 @@ export default function CoffeeLoverHome() {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [currentGalleryImage, setCurrentGalleryImage] = useState(0);
   const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [activeTestimonial, setActiveTestimonial] = useState<number | null>(null);
   const { toast } = useToast();
   const heroRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -162,6 +165,42 @@ export default function CoffeeLoverHome() {
       description: "Creamy perfection with steamed milk and foam art. The ideal harmony of espresso, steamed milk, and velvety foam.",
       price: "$5.99", 
       imageUrl: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400"
+    },
+    {
+      name: "Latte",
+      description: "Silky steamed milk with a smooth espresso base, finished with light foam.",
+      price: "$5.49",
+      imageUrl: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&h=400"
+    },
+    {
+      name: "Mocha",
+      description: "Chocolate meets espresso with steamed milk and a whipped cream crown.",
+      price: "$5.99",
+      imageUrl: "https://images.unsplash.com/photo-1497636577773-f1231844b336?auto=format&fit=crop&w=600&h=400"
+    },
+    {
+      name: "Flat White",
+      description: "Velvety microfoam poured over a rich double shot for a bold, creamy sip.",
+      price: "$5.49",
+      imageUrl: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=600&h=400"
+    },
+    {
+      name: "Macchiato",
+      description: "A bold espresso stained with a touch of foam for a concentrated flavor.",
+      price: "$4.49",
+      imageUrl: "https://images.unsplash.com/photo-1517705008128-361805f42e86?auto=format&fit=crop&w=600&h=400"
+    },
+    {
+      name: "Affogato",
+      description: "A scoop of vanilla gelato drowned in a hot shot of espresso.",
+      price: "$6.49",
+      imageUrl: "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=600&h=400"
+    },
+    {
+      name: "Iced Caramel Latte",
+      description: "Chilled espresso, milk, and buttery caramel over ice — sweet and refreshing.",
+      price: "$5.99",
+      imageUrl: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=600&h=400"
     }
   ];
 
@@ -189,6 +228,36 @@ export default function CoffeeLoverHome() {
       review: "The ambiance is perfect for meetings and the coffee quality is consistently excellent. I love how they've combined traditional coffee culture with modern convenience.",
       rating: 5,
       imageUrl: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150"
+    },
+    {
+      name: "Aisha Khan",
+      review: "Love the seasonal specials! The cinnamon latte is my go-to comfort drink.",
+      rating: 5,
+      imageUrl: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=150&h=150"
+    },
+    {
+      name: "Marco Rossi",
+      review: "Friendly staff and great beans. Perfect spot to start the day.",
+      rating: 5,
+      imageUrl: "https://images.unsplash.com/photo-1544006659-f0b21884ce1d?auto=format&fit=crop&w=150&h=150"
+    },
+    {
+      name: "Liu Wei",
+      review: "The flat white is legit. Consistent microfoam and rich espresso every time.",
+      rating: 5,
+      imageUrl: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=150&h=150"
+    },
+    {
+      name: "Emma Wilson",
+      review: "Cozy vibes and fast Wi‑Fi. I finish half my assignments here.",
+      rating: 5,
+      imageUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&h=150"
+    },
+    {
+      name: "Noah Smith",
+      review: "Pastries are fresh and pair perfectly with the pour-over.",
+      rating: 5,
+      imageUrl: "https://images.unsplash.com/photo-1546456073-6712f79251bb?auto=format&fit=crop&w=150&h=150"
     }
   ];
 
@@ -285,9 +354,20 @@ export default function CoffeeLoverHome() {
             <button 
               onClick={() => scrollToSection('services')} 
               className="text-foreground hover:text-primary transition-colors font-medium relative group" 
-              data-testid="nav-services"
+              data-testid="nav-menu"
             >
-              Services
+              Menu
+              <motion.div
+                className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"
+                whileHover={{ width: "100%" }}
+              />
+            </button>
+            <button 
+              onClick={() => scrollToSection('experience')} 
+              className="text-foreground hover:text-primary transition-colors font-medium relative group" 
+              data-testid="nav-experience"
+            >
+              Experience
               <motion.div
                 className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"
                 whileHover={{ width: "100%" }}
@@ -304,19 +384,45 @@ export default function CoffeeLoverHome() {
                 whileHover={{ width: "100%" }}
               />
             </button>
+            <button 
+              onClick={() => scrollToSection('story')} 
+              className="text-foreground hover:text-primary transition-colors font-medium relative group" 
+              data-testid="nav-story"
+            >
+              Story
+              <motion.div
+                className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"
+                whileHover={{ width: "100%" }}
+              />
+            </button>
           </div>
 
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
+          <div className="hidden md:flex items-center gap-3">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button 
+                className="bg-primary text-primary-foreground px-3 py-2 rounded-full hover:bg-primary/90 transition-colors font-medium"
+                aria-label="Wishlist"
+              >
+                <Heart className="w-5 h-5" />
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button 
-              className="hidden md:block bg-primary text-primary-foreground px-6 py-2 rounded-full hover:bg-primary/90 transition-colors font-medium" 
+                className="bg-primary text-primary-foreground px-3 py-2 rounded-full hover:bg-primary/90 transition-colors font-medium"
+                aria-label="Cart"
+              >
+                <ShoppingCart className="w-5 h-5" />
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button 
+                className="bg-primary text-primary-foreground px-6 py-2 rounded-full hover:bg-primary/90 transition-colors font-medium" 
               data-testid="button-order-now-nav"
             >
               Order
             </Button>
           </motion.div>
+          </div>
 
           <Button
             variant="ghost"
@@ -356,7 +462,7 @@ export default function CoffeeLoverHome() {
       <motion.section 
         id="home" 
         ref={heroRef}
-        className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20" 
+        className="relative min-h-screen flex items-center justify-start overflow-hidden pt-20" 
         data-testid="hero-section"
         initial="hidden"
         animate="visible"
@@ -393,8 +499,8 @@ export default function CoffeeLoverHome() {
           />
         </motion.div>
 
-        <div className="relative z-20 max-w-7xl mx-auto px-6 text-center">
-          <motion.div variants={fadeInUpVariants}>
+        <div className="relative z-20 w-full grid lg:grid-cols-2 gap-8 items-center pl-8 pr-6 md:pl-16">
+          <motion.div variants={fadeInUpVariants} className="order-2 lg:order-1">
             <motion.h1 
               className="font-serif text-6xl md:text-8xl font-bold text-foreground leading-tight mb-8" 
               data-testid="hero-title"
@@ -422,65 +528,50 @@ export default function CoffeeLoverHome() {
           </motion.div>
 
           <motion.div
-            className="mb-12"
+            className="mb-12 order-3 lg:order-3"
             variants={fadeInUpVariants}
           >
             <motion.p 
-              className="text-2xl text-muted-foreground flex items-center justify-center gap-3"
+              className="text-2xl text-muted-foreground"
               data-testid="hero-subtitle"
             >
-              <Code className="w-6 h-6 text-primary" />
-              Coffee And Code
+              Coffee. Comfort. Conversations
             </motion.p>
           </motion.div>
 
+          {/* Removed ThreeJSCoffee visual per requirements */}
+
+          {/* Removed 'Best Coffee' heading per request */}
+
+          {/* Right: 3D-styled coffee cup visual */}
           <motion.div 
-            className="mb-16 relative"
-            variants={fadeInUpVariants}
+            className="order-1 lg:order-2 flex items-center justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <motion.div
-              className="relative z-10"
-              style={{ scale }}
+              className="relative w-56 h-56 md:w-72 md:h-72 rounded-full shadow-2xl ring-8 ring-black/5 bg-gradient-to-b from-card to-background"
+              style={{ perspective: 1000 }}
+              whileHover={{ rotateX: 6, rotateY: -6, scale: 1.03 }}
+              animate={{ y: [0, -10, 0], rotateZ: [-2, 2, -2], rotateY: [-3, 3, -3], boxShadow: [
+                "0 20px 40px rgba(0,0,0,0.2)",
+                "0 28px 50px rgba(0,0,0,0.25)",
+                "0 20px 40px rgba(0,0,0,0.2)"
+              ] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             >
-              <ThreeJSCoffee />
+              <div className="absolute inset-0 rounded-full overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=600&h=600&q=80" 
+                  alt="3D Coffee Cup" 
+                  className="w-full h-full object-cover"
+                  loading="eager"
+                />
+              </div>
+              <div className="absolute -inset-1 rounded-full bg-gradient-to-b from-white/10 to-black/10 pointer-events-none"></div>
+              <div className="absolute -z-10 inset-0 rounded-full blur-2xl bg-primary/20" />
             </motion.div>
-            <motion.div
-              className="absolute inset-0 z-0"
-              animate={{
-                rotate: [0, 360],
-                scale: [1, 1.1, 1]
-              }}
-              transition={{
-                rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                scale: { duration: 3, repeat: Infinity, ease: "easeInOut" }
-              }}
-            >
-              <div className="w-64 h-64 mx-auto rounded-full bg-gradient-to-br from-primary/20 to-accent/20 blur-xl" />
-            </motion.div>
-          </motion.div>
-
-          <motion.div variants={fadeInUpVariants}>
-            <motion.h2 
-              className="font-serif text-4xl md:text-6xl font-bold text-foreground mb-8"
-              data-testid="hero-coder-title"
-            >
-              Hey Coder
-            </motion.h2>
-          </motion.div>
-
-          <motion.div variants={fadeInUpVariants}>
-            <motion.h3 
-              className="font-serif text-3xl md:text-5xl font-bold text-primary mb-4"
-              data-testid="hero-best-coffee"
-            >
-              Best Coffee
-            </motion.h3>
-            <motion.h4 
-              className="font-serif text-2xl md:text-4xl font-bold text-foreground"
-              data-testid="hero-best-coffee-for-you"
-            >
-              Best Coffee For You
-            </motion.h4>
           </motion.div>
         </div>
       </motion.section>
@@ -631,35 +722,31 @@ export default function CoffeeLoverHome() {
             </motion.div>
           </motion.div>
 
-          {/* Tea Lover Section */}
-          <motion.div 
-            className="text-center"
-            variants={fadeInUpVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-card-foreground mb-6">Tea Lover</h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Much like writing code, brewing the perfect cup of tea requires patience, precision, and a dash of passion to create a comforting blend of flavors.
-            </p>
-          </motion.div>
+          {/* Tea Lover section removed as requested */}
         </div>
       </motion.section>
 
       {/* Interactive Coffee Brewing Process */}
       <motion.section 
         className="py-20 bg-gradient-to-br from-background to-card relative overflow-hidden"
+        id="experience"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
       >
         <div className="relative z-10 max-w-7xl mx-auto px-6">
           <motion.h2 
-            className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-12 text-center"
+            className="font-mono text-4xl md:text-5xl font-extrabold text-foreground mb-12 tracking-tight"
             variants={fadeInUpVariants}
           >
-            Coffee Brewing Process
+            <motion.span
+              className="bg-gradient-to-r from-orange-400 via-amber-500 to-orange-400 bg-clip-text text-transparent drop-shadow-[0_3px_10px_rgba(245,158,11,0.35)]"
+              animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+              transition={{ duration: 7.5, repeat: Infinity, ease: 'linear' }}
+              style={{ backgroundSize: '200% 200%' }}
+            >
+              Coffee Brewing Process
+            </motion.span>
           </motion.h2>
           
           <motion.div 
@@ -719,30 +806,105 @@ export default function CoffeeLoverHome() {
       {/* Interactive Gallery Section */}
       <motion.section 
         className="py-20 bg-background relative overflow-hidden"
+        id="story"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
       >
         <div className="relative z-10 max-w-7xl mx-auto px-6">
           <motion.h2 
-            className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-12 text-center"
+            className="font-mono text-4xl md:text-5xl font-bold text-foreground mb-12 text-center"
             variants={fadeInUpVariants}
           >
-            Coffee Gallery
+            <motion.span
+              className="bg-gradient-to-r from-orange-400 via-amber-500 to-orange-400 bg-clip-text text-transparent drop-shadow-[0_3px_10px_rgba(245,158,11,0.35)]"
+              animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+              transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
+              style={{ backgroundSize: '200% 200%' }}
+            >
+              Coffee Gallery
+            </motion.span>
           </motion.h2>
           
           <motion.div 
-            className="relative h-96 rounded-2xl overflow-hidden shadow-2xl group"
+            className="relative h-[34rem] md:h-[38rem] rounded-2xl overflow-hidden shadow-2xl group"
             variants={fadeInUpVariants}
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
           >
+            {/* 3D animated background behind carousel */}
+            <motion.div
+              className="absolute -z-10 inset-0"
+              aria-hidden
+            >
+              {/* Rotating ring */}
+              <motion.div
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] rounded-full"
+                style={{
+                  background:
+                    "radial-gradient(circle at center, rgba(255,255,255,0.08) 0 35%, transparent 36%)",
+                  boxShadow: "inset 0 0 80px rgba(0,0,0,0.25)",
+                }}
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+              />
+              {/* Conic gradient halo */}
+              <motion.div
+                className="absolute inset-[-20%] rounded-[40px] opacity-30"
+                style={{
+                  background:
+                    "conic-gradient(from 0deg, rgba(255,153,51,0.2), transparent 30%, rgba(255,153,51,0.15), transparent 60%, rgba(255,153,51,0.2))",
+                  filter: "blur(12px)",
+                }}
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+              />
+              {/* Parallax 3D grid */}
+              <motion.div
+                className="absolute inset-0"
+                style={{ perspective: 1200 }}
+              >
+                <motion.div
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[160%]"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
+                    backgroundSize: "40px 40px",
+                    transformStyle: "preserve-3d",
+                  }}
+                  animate={{ rotateX: 55, rotateZ: [0, 360] }}
+                  transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+                />
+              </motion.div>
+              {/* Gradient blobs */}
+              <motion.div
+                className="absolute -bottom-12 -left-12 w-80 h-80 bg-primary/20 blur-3xl rounded-full"
+                animate={{ y: [0, -20, 0], scale: [1, 1.05, 1] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <motion.div
+                className="absolute -top-12 -right-12 w-80 h-80 bg-accent/20 blur-3xl rounded-full"
+                animate={{ y: [0, 20, 0], scale: [1, 0.95, 1] }}
+                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+              />
+              {/* Floating particles */}
+              {Array.from({ length: 18 }).map((_, i) => (
+                <motion.span
+                  key={i}
+                  className="absolute w-1.5 h-1.5 bg-white/50 rounded-full shadow-md"
+                  style={{ left: `${(i * 37) % 100}%`, top: `${(i * 19) % 100}%` }}
+                  animate={{ y: [0, -20, 0], opacity: [0.2, 0.8, 0.2] }}
+                  transition={{ duration: 4 + (i % 5), repeat: Infinity, ease: "easeInOut", delay: (i % 10) * 0.15 }}
+                />)
+              )}
+            </motion.div>
+
             <AnimatePresence mode="wait">
               <motion.img
                 key={currentGalleryImage}
                 src={galleryImages[currentGalleryImage]}
                 alt="Coffee gallery"
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
                 initial={{ x: 300, opacity: 0, scale: 1.1 }}
                 animate={{ x: 0, opacity: 1, scale: 1 }}
                 exit={{ x: -300, opacity: 0, scale: 0.9 }}
@@ -804,7 +966,7 @@ export default function CoffeeLoverHome() {
             {galleryImages.map((image, index) => (
               <motion.div
                 key={index}
-                className={`relative h-20 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 ${
+                className={`relative h-24 md:h-28 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 ${
                   index === currentGalleryImage ? 'ring-2 ring-primary' : 'opacity-70 hover:opacity-100'
                 }`}
                 onClick={() => setCurrentGalleryImage(index)}
@@ -834,10 +996,17 @@ export default function CoffeeLoverHome() {
       >
         <div className="relative z-10 max-w-7xl mx-auto px-6">
           <motion.h2 
-            className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-12 text-center"
+            className="font-mono text-4xl md:text-5xl font-extrabold text-foreground mb-12 text-center tracking-tight"
             variants={fadeInUpVariants}
           >
-            Why Choose Coffee Cafe?
+            <motion.span
+              className="bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(251,146,60,0.35)]"
+              animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+              transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+              style={{ backgroundSize: '200% 200%' }}
+            >
+              Why Choose Coffee Cafe?
+            </motion.span>
           </motion.h2>
           
           <motion.div 
@@ -905,7 +1074,7 @@ export default function CoffeeLoverHome() {
 
       {/* Mobile App Section */}
       <motion.section 
-        className="py-20 bg-gradient-to-br from-primary/20 to-accent/20 relative overflow-hidden" 
+        className="pt-20 pb-16 bg-gradient-to-br from-primary/20 to-accent/20 relative overflow-hidden" 
         data-testid="mobile-app-section"
         initial="hidden"
         whileInView="visible"
@@ -913,13 +1082,62 @@ export default function CoffeeLoverHome() {
       >
         <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
           <motion.h2 
-            className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-12" 
+            className="font-mono text-4xl md:text-5xl font-extrabold text-foreground mb-12 tracking-tight"
             data-testid="app-section-title"
             variants={fadeInUpVariants}
           >
             Coffee Cafe is available for 
-            <span className="text-primary block">Android and iOS</span>
+            <motion.span 
+              className="block bg-gradient-to-r from-orange-400 via-amber-500 to-orange-400 bg-clip-text text-transparent drop-shadow-[0_2px_6px_rgba(245,158,11,0.35)]"
+              animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+              style={{ backgroundSize: '200% 200%' }}
+            >
+              Android and iOS
+            </motion.span>
           </motion.h2>
+          {/* Re-added large 3D animated cafe images flanking the heading (md+) */}
+          <motion.div
+            className="hidden md:block absolute left-0 lg:-left-10 top-1/2 -translate-y-1/2"
+            initial={{ opacity: 0, y: -60 }}
+            animate={{ opacity: 1, y: [-60, 60] }}
+            transition={{ duration: 14, repeat: Infinity, repeatType: 'reverse', ease: 'linear' }}
+          >
+            <motion.div
+              className="relative w-56 h-56 lg:w-80 lg:h-80 xl:w-[22rem] xl:h-[22rem] rounded-full overflow-hidden ring-8 ring-white/10 shadow-2xl"
+              whileHover={{ rotateX: 6, rotateY: -6, scale: 1.03 }}
+              style={{ perspective: 1000 }}
+            >
+              <img
+                src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=880&h=880&q=80"
+                alt="Cafe latte art"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-black/10" />
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            className="hidden md:block absolute right-0 lg:-right-10 top-1/2 -translate-y-1/2"
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: [60, -60] }}
+            transition={{ duration: 14, repeat: Infinity, repeatType: 'reverse', ease: 'linear' }}
+          >
+            <motion.div
+              className="relative w-52 h-52 lg:w-72 lg:h-72 xl:w-[20rem] xl:h-[20rem] rounded-full overflow-hidden ring-8 ring-white/10 shadow-2xl"
+              whileHover={{ rotateX: -6, rotateY: 6, scale: 1.03 }}
+              style={{ perspective: 1000 }}
+            >
+              <img
+                src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=820&h=820&q=80"
+                alt="Coffee beans"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-black/10" />
+            </motion.div>
+          </motion.div>
 
           <motion.div 
             className="flex flex-col sm:flex-row gap-6 justify-center"
@@ -953,22 +1171,72 @@ export default function CoffeeLoverHome() {
               </Button>
             </motion.div>
           </motion.div>
+
+          {/* Food Delivery CTAs */}
+          <motion.div 
+            className="my-16 flex flex-col sm:flex-row gap-8 justify-center items-center"
+            variants={staggerContainer}
+          >
+            <motion.div
+              animate={{ y: [0, -4, 0], boxShadow: [
+                '0 12px 28px rgba(226,55,68,0.25)',
+                '0 18px 36px rgba(226,55,68,0.35)',
+                '0 12px 28px rgba(226,55,68,0.25)'
+              ] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              whileHover={{ scale: 1.07, rotate: -1 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              <Button
+                onClick={() => window.open('https://www.zomato.com', '_blank')}
+                className="inline-flex items-center justify-center bg-[#E23744] text-white w-64 md:w-72 px-8 py-7 rounded-2xl font-semibold text-xl hover:brightness-110 transition-colors"
+              >
+                <Utensils className="w-7 h-7 mr-3" />
+                Order on Zomato
+              </Button>
+            </motion.div>
+            <motion.div
+              animate={{ y: [0, -4, 0], boxShadow: [
+                '0 12px 28px rgba(252,128,25,0.25)',
+                '0 18px 36px rgba(252,128,25,0.35)',
+                '0 12px 28px rgba(252,128,25,0.25)'
+              ] }}
+              transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 0.2 }}
+              whileHover={{ scale: 1.07, rotate: 1 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              <Button
+                onClick={() => window.open('https://www.swiggy.com', '_blank')}
+                className="inline-flex items-center justify-center bg-[#FC8019] text-white w-64 md:w-72 px-8 py-7 rounded-2xl font-semibold text-xl hover:brightness-110 transition-colors"
+              >
+                <Bike className="w-7 h-7 mr-3" />
+                Order on Swiggy
+              </Button>
+            </motion.div>
+          </motion.div>
         </div>
       </motion.section>
 
       {/* Newsletter Section */}
       <motion.section 
-        className="py-20 bg-gradient-to-br from-primary/10 via-accent/10 to-primary/10 relative overflow-hidden"
+        className="pt-16 pb-20 bg-gradient-to-br from-primary/10 via-accent/10 to-primary/10 relative overflow-hidden"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
       >
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <motion.h2 
-            className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6"
+            className="font-mono text-4xl md:text-5xl font-extrabold text-foreground mb-6 tracking-tight"
             variants={fadeInUpVariants}
           >
-            Stay Updated with Coffee Cafe
+            <motion.span
+              className="bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(251,146,60,0.35)]"
+              animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+              transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+              style={{ backgroundSize: '200% 200%' }}
+            >
+              Stay Updated with Coffee Cafe
+            </motion.span>
           </motion.h2>
           <motion.p 
             className="text-xl text-muted-foreground mb-8"
@@ -1049,70 +1317,140 @@ export default function CoffeeLoverHome() {
         />
       </motion.section>
 
-      {/* Testimonials Section */}
+      {/* Testimonials Section (About) with horizontal marquee and 3D background */}
       <motion.section 
         id="about" 
-        className="py-20 bg-card relative overflow-hidden" 
+        className="py-20 relative overflow-hidden bg-gradient-to-b from-background via-[#0b0f14] to-background" 
         data-testid="testimonials-section"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
       >
+        {/* Section-wide animated 3D background */}
+        <motion.div className="absolute inset-0 -z-10" aria-hidden>
+          <motion.div
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[160%] rounded-full"
+            style={{
+              background: "radial-gradient(circle at center, rgba(255,255,255,0.12) 0 32%, transparent 33%)",
+              boxShadow: "inset 0 0 160px rgba(0,0,0,0.35)",
+            }}
+            animate={{ rotate: [0, 360] }}
+            transition={{ duration: 90, repeat: Infinity, ease: "linear" }}
+          />
+          {/* Conic swirl for stronger energy */}
+          <motion.div
+            className="absolute inset-[-20%] opacity-40"
+            style={{
+              background:
+                "conic-gradient(from 0deg at 50% 50%, rgba(255,180,80,0.18), transparent 30%, rgba(255,140,40,0.22), transparent 60%, rgba(255,180,80,0.18))",
+              filter: "blur(10px)"
+            }}
+            animate={{ rotate: [0, 360] }}
+            transition={{ duration: 70, repeat: Infinity, ease: 'linear' }}
+          />
+          <motion.div
+            className="absolute inset-0"
+            style={{ perspective: 1200 }}
+          >
+            <motion.div
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[220%] h-[220%]"
+              style={{
+                backgroundImage: "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
+                backgroundSize: "56px 56px",
+                transformStyle: "preserve-3d",
+              }}
+              animate={{ rotateX: 55, rotateZ: [0, 360] }}
+              transition={{ duration: 140, repeat: Infinity, ease: "linear" }}
+            />
+          </motion.div>
+          <motion.div className="absolute -left-24 -bottom-24 w-[28rem] h-[28rem] bg-primary/30 blur-3xl rounded-full" animate={{ y: [0, -24, 0] }} transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }} />
+          <motion.div className="absolute -right-24 -top-24 w-[28rem] h-[28rem] bg-accent/30 blur-3xl rounded-full" animate={{ y: [0, 24, 0] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 0.4 }} />
+          {/* Sweeping light beams */}
+          {Array.from({ length: 6 }).map((_, i) => (
+            <motion.div
+              key={`beam-${i}`}
+              className="absolute -left-1/3 top-0 w-2/3 h-full rotate-12"
+              style={{
+                background:
+                  'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,200,120,0.20) 45%, rgba(255,255,255,0) 80%)',
+                filter: 'blur(3px)'
+              }}
+              animate={{ x: ['-40%', '130%'] }}
+              transition={{ duration: 10 + i * 1.6, repeat: Infinity, ease: 'linear', delay: i * 0.9 }}
+            />
+          ))}
+          {/* Floating bokeh particles */}
+          {Array.from({ length: 36 }).map((_, i) => (
+            <motion.span
+              key={`bokeh-${i}`}
+              className="absolute w-3 h-3 rounded-full"
+              style={{
+                left: `${(i * 41) % 100}%`,
+                top: `${(i * 29) % 100}%`,
+                background: 'radial-gradient(circle, rgba(255,200,120,0.75) 0%, rgba(255,200,120,0.0) 70%)',
+                filter: 'blur(0.8px)'
+              }}
+              animate={{ y: [0, -24, 0], opacity: [0.25, 1, 0.25], scale: [0.85, 1.2, 0.85] }}
+              transition={{ duration: 5 + (i % 5), repeat: Infinity, ease: 'easeInOut', delay: (i % 12) * 0.15 }}
+            />
+          ))}
+        </motion.div>
+
         <div className="relative z-10 max-w-7xl mx-auto px-6">
           <motion.div 
-            className="text-center mb-16"
+            className="text-center mb-12"
             variants={fadeInUpVariants}
           >
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-card-foreground mb-4" data-testid="testimonials-title">Testimonials</h2>
-            <p className="text-muted-foreground text-lg">What our coffee lovers say about us</p>
+            <h2 className="font-sans uppercase text-3xl md:text-4xl font-extrabold tracking-widest mb-8 text-center" data-testid="testimonials-title"><motion.span className="bg-gradient-to-r from-orange-400 via-yellow-400 to-amber-500 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(251,191,36,0.35)]" animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }} transition={{ duration: 7, repeat: Infinity, ease: 'linear' }} style={{ backgroundSize: '200% 200%' }}>Testimonials</motion.span></h2>
+            <motion.p 
+              className="text-lg font-medium bg-gradient-to-r from-amber-300 via-orange-400 to-amber-300 bg-clip-text text-transparent"
+              animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+              transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+              style={{ backgroundSize: '200% 200%' }}
+            >
+              What our coffee lovers say about us
+            </motion.p>
           </motion.div>
-
-          <motion.div 
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
-            variants={staggerContainer}
-          >
-            {testimonials.map((testimonial, index) => (
+          <motion.div className="mx-auto mb-10 h-1 w-24 bg-primary rounded-full" initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} transition={{ duration: 0.8, ease: 'easeOut' }} />
+          {/* Marquee container */}
+          <div className="relative overflow-hidden">
               <motion.div
-                key={`${testimonial.name}-${index}`}
-                variants={index % 2 === 0 ? slideInLeft : slideInRight}
-                whileHover={{ scale: 1.05, y: -10 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <TestimonialCard
-                  name={testimonial.name}
-                  review={testimonial.review}
-                  rating={testimonial.rating}
-                  imageUrl={testimonial.imageUrl}
-                />
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Pagination */}
-          <motion.div 
-            className="flex justify-center items-center mt-12 space-x-2" 
-            data-testid="testimonial-navigation"
-            variants={fadeInUpVariants}
-          >
-            {[1, 2, 3, 4].map((page) => (
-              <motion.div
-                key={page}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.8 }}
-              >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={`w-8 h-8 rounded-full p-0 ${
-                    page === 1 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+              className="flex gap-6 will-change-transform"
+              variants={fadeInUpVariants}
+              animate={{ x: [0, -1200] }}
+              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+            >
+              {[...testimonials, ...testimonials].map((t, index) => (
+                <motion.div
+                  key={`${t.name}-${index}`}
+                  className={`min-w-[320px] w-[320px] h-[360px] shrink-0 rounded-2xl border-2 transition-all duration-200 hover:border-orange-500 hover:ring-4 hover:ring-orange-500 hover:ring-offset-2 hover:ring-offset-card ${
+                    activeTestimonial === index ? 'border-orange-500 ring-4 ring-orange-500 ring-offset-2 ring-offset-card shadow-[0_8px_28px_rgba(234,88,12,0.25)]' : 'border-border'
                   }`}
-                  data-testid={`testimonial-page-${page}`}
+                  whileHover={{ y: -6, scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 24 }}
+                  onClick={() => setActiveTestimonial(prev => prev === index ? null : index)}
                 >
-                  {page}
-                </Button>
+                  <Card className="h-full flex flex-col items-center text-center shadow-lg border-0 bg-background/70 backdrop-blur-sm rounded-2xl">
+                    <div className="pt-6">
+                      <img src={t.imageUrl} alt={t.name} className="w-16 h-16 rounded-full object-cover mx-auto shadow" />
+                    </div>
+                    <CardContent className="flex-1 w-full flex flex-col items-center px-6 py-4">
+                      <h3 className="font-semibold text-card-foreground mb-2">{t.name}</h3>
+                      <div className="flex items-center justify-center gap-1 mb-3">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star key={i} className={`w-4 h-4 ${i < t.rating ? 'text-primary' : 'text-muted-foreground/40'}`} />
+                        ))}
+                      </div>
+                      <p className="text-muted-foreground line-clamp-4">
+                        {t.review}
+                      </p>
+                    </CardContent>
+                  </Card>
               </motion.div>
             ))}
           </motion.div>
+          </div>
         </div>
       </motion.section>
 

@@ -25,8 +25,15 @@ import {
   Menu,
   X,
   Code,
-  Download
+  Download,
+  Award,
+  Gift,
+  Clock,
+  ChevronDown,
+  ArrowRight
 } from 'lucide-react';
+import StatsCounter from '@/components/StatsCounter';
+import ContactForm from '@/components/ContactForm';
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -395,7 +402,7 @@ export default function Home() {
               className="relative"
               variants={fadeInUpVariants}
             >
-              <ThreeJSCoffee />
+              {/* <ThreeJSCoffee /> Removed as per user request */}
 
               <motion.div 
                 className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-center"
@@ -757,7 +764,7 @@ export default function Home() {
 
                   <div className="flex items-center space-x-4" data-testid="contact-location">
                     <div className="bg-primary/10 p-3 rounded-full">
-                      <MapPinIcon className="w-5 h-5 text-primary" />
+                      <MapPin className="w-5 h-5 text-primary" />
                     </div>
                     <div>
                       <p className="text-muted-foreground text-sm">Location</p>
